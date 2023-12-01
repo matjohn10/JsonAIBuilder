@@ -6,12 +6,13 @@ import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button } from "./ui/button";
-import { Loader2 } from "lucide-react";
+import { Copy, CopyCheck, Loader2 } from "lucide-react";
 
 const FormContainer = () => {
   const [answer, setAnswer] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [question, setQuestion] = useState("");
+  const [copied, setCopied] = useState(false);
   const onChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setQuestion(e.currentTarget.value);
 
@@ -55,7 +56,23 @@ const FormContainer = () => {
           Submit
         </Button>
       </div>
-      <ScrollArea className="flex flex-col rounded-md items-center max-h-[300px] w-full justify-center p-4 mt-8 bg-secondary">
+      <ScrollArea className="relative flex flex-col rounded-md items-center max-h-[300px] w-full justify-center p-4 mt-8 bg-secondary">
+        <div className="absolute top-2 right-4">
+          {copied ? (
+            <CopyCheck
+              className="h-6 w-6 hover:opacity-90 "
+              onClick={() => navigator.clipboard.writeText(answer)}
+            />
+          ) : (
+            <Copy
+              className="h-6 w-6 hover:opacity-90 hover:cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(answer);
+                setCopied(true);
+              }}
+            />
+          )}
+        </div>
         {isLoading ? (
           <div className="flex flex-col gap-2 items-center">
             <p>Waiting for GPT's answer</p>
